@@ -6,6 +6,9 @@ import { getProduct } from "@/lib/api";
 import ProductSummary from "@/components/products/ProductSummary";
 import MarketPriceTable from "@/components/products/MarketPriceTable";
 
+// সেশন ও বাজারদর দুটোই runtime data — প্রতিবার রিকোয়েস্টে যাচাই ও লোড হয়।
+export const instant = false;
+
 export default async function ProductDetailsPage({ params }) {
   const { slug } = await params;
 
@@ -31,9 +34,12 @@ export default async function ProductDetailsPage({ params }) {
   }
 
   return (
-    <main className="site-container min-h-[65vh] py-8">
+    <main className="site-container min-h-[65vh] py-6 sm:py-8">
       <div className="mb-5">
-        <Link href="/" className="text-sm text-brand hover:underline">
+        <Link
+          href="/"
+          className="text-sm font-medium text-brand transition-colors hover:text-brand-dark hover:underline"
+        >
           ← হোম পেজ
         </Link>
       </div>

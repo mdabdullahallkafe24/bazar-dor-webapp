@@ -77,18 +77,18 @@ export default function SignUpPage() {
   }
 
   return (
-    <main className="flex min-h-[calc(100vh-120px)] items-center justify-center bg-[#f0f6f1] px-4 py-10">
-      <section className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
+    <main className="flex min-h-[calc(100vh-180px)] items-center justify-center bg-gradient-to-b from-[#f4fbf6] to-page px-4 py-10">
+      <section className="w-full max-w-md rounded-2xl border border-line bg-white p-6 shadow-lg shadow-emerald-900/5 sm:p-8">
         <div className="mb-6 text-center">
           <Link
             href="/"
-            className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-600 text-2xl"
+            className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-700 text-2xl text-white shadow-sm shadow-emerald-600/30"
             aria-label="বাজার দর হোম"
           >
             🛒
           </Link>
 
-          <h1 className="text-2xl font-extrabold text-gray-900">
+          <h1 className="text-xl font-extrabold tracking-tight text-gray-900">
             বাজার দর
           </h1>
 
@@ -96,7 +96,7 @@ export default function SignUpPage() {
             নতুন অ্যাকাউন্ট তৈরি করুন
           </h2>
 
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-1.5 text-sm text-gray-500">
             বাজারদর জানতে আপনার অ্যাকাউন্ট খুলুন।
           </p>
         </div>
@@ -119,7 +119,7 @@ export default function SignUpPage() {
               value={form.name}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+              className="field-input"
             />
           </div>
 
@@ -140,7 +140,7 @@ export default function SignUpPage() {
               value={form.email}
               onChange={handleChange}
               required
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+              className="field-input"
             />
           </div>
 
@@ -162,7 +162,7 @@ export default function SignUpPage() {
               onChange={handleChange}
               minLength={8}
               required
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+              className="field-input"
             />
           </div>
 
@@ -182,15 +182,16 @@ export default function SignUpPage() {
               placeholder="পাসওয়ার্ড আবার লিখুন"
               value={form.confirmPassword}
               onChange={handleChange}
+              minLength={8}
               required
-              className="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100"
+              className="field-input"
             />
           </div>
 
           {error && (
             <p
               role="alert"
-              className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+              className="rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"
             >
               {error}
             </p>
@@ -199,32 +200,43 @@ export default function SignUpPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-emerald-600 px-4 py-3 text-sm font-bold text-white transition hover:bg-emerald-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="brand-button w-full"
           >
-            {loading ? "অ্যাকাউন্ট তৈরি হচ্ছে..." : "অ্যাকাউন্ট তৈরি করুন"}
+            {loading ? (
+              <>
+                <span className="loading loading-spinner loading-sm" />
+                অ্যাকাউন্ট তৈরি হচ্ছে...
+              </>
+            ) : (
+              "অ্যাকাউন্ট তৈরি করুন"
+            )}
           </button>
         </form>
 
         <div className="my-5 flex items-center gap-3">
-          <div className="h-px flex-1 bg-gray-200" />
+          <div className="h-px flex-1 bg-line" />
           <span className="text-xs text-gray-500">অথবা</span>
-          <div className="h-px flex-1 bg-gray-200" />
+          <div className="h-px flex-1 bg-line" />
         </div>
 
         <p className="text-center text-sm text-gray-600">
+          নিবন্ধন করে আপনি আমাদের সেবা ব্যবহারে সম্মত হচ্ছেন।
+        </p>
+
+        <p className="mt-3 text-center text-sm text-gray-600">
           আগে থেকেই অ্যাকাউন্ট আছে?{" "}
           <Link
             href="/signin"
-            className="font-bold text-emerald-700 underline-offset-4 hover:text-emerald-800 hover:underline"
+            className="font-bold text-brand underline-offset-4 hover:text-brand-dark hover:underline"
           >
-            সাইন ইন করুন
+            লগইন করুন
           </Link>
         </p>
 
         <div className="mt-5 text-center">
           <Link
             href="/"
-            className="text-sm text-gray-500 transition hover:text-emerald-700"
+            className="text-sm text-gray-500 transition-colors hover:text-brand"
           >
             ← হোম পেজে ফিরে যান
           </Link>

@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { toNextJsHandler } from "better-auth/integrations/next-js";
+import { toNextJsHandler } from "better-auth/next-js";
 
 // better-auth-এর সব endpoint (/api/auth/*) এই catch-all route দিয়ে চলে।
 const handlers = toNextJsHandler(auth);

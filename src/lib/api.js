@@ -40,9 +40,24 @@ export async function getProducts(category) {
 }
 
 export async function getProduct(slug) {
+  // API-তে single product শুধু id দিয়ে পাওয়া যায়, slug দিয়ে নয়।
+  // তাই আগে slug filter দিয়ে খোঁজা হয়, না পেলে id হিসেবে চেষ্টা করা হয়।
   const result = await request(
-    `/products/${encodeURIComponent(slug)}`
+    `/products?slug=${encodeURIComponent(slug)}`
   );
+
+  if (Array.isArray(result) && result.length > 0) {
+    return result[0];
+  }
+
+  if (Array.isArray(result)) {
+    // slug দিয়ে না পেলে id হিসেবে খোঁজার চেষ্টা (যেমন /products/1)।
+    const byId = await request(
+      `/products/${encodeURIComponent(slug)}`
+    );
+
+    return byId?.product ?? byId?.item ?? byId;
+  }
 
   return result?.product ?? result?.item ?? result;
 }

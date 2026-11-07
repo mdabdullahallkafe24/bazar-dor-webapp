@@ -20,15 +20,26 @@ export default function ProfilePage() {
   if (isPending) {
     return (
       <main className="site-container py-12">
-        <div className="skeleton mx-auto h-48 max-w-xl rounded-2xl" />
+        <div className="skeleton mx-auto h-48 max-w-2xl rounded-2xl" />
       </main>
     );
   }
 
   if (!session?.user) {
     return (
-      <main className="site-container py-16 text-center">
-        <h1 className="text-xl font-bold">প্রোফাইল দেখতে সাইন ইন করুন</h1>
+      <main className="site-container flex min-h-[55vh] flex-col items-center justify-center py-16 text-center">
+        <div
+          className="flex h-16 w-16 items-center justify-center rounded-full bg-brand-soft text-3xl"
+          aria-hidden="true"
+        >
+          👤
+        </div>
+        <h1 className="mt-4 text-xl font-bold text-ink">
+          প্রোফাইল দেখতে সাইন ইন করুন
+        </h1>
+        <p className="mt-1.5 text-sm text-muted">
+          আপনার অ্যাকাউন্টের তথ্য দেখতে প্রবেশ করুন।
+        </p>
         <Link href="/signin" className="brand-button mt-5">
           সাইন ইন
         </Link>
@@ -39,9 +50,9 @@ export default function ProfilePage() {
   const user = session.user;
 
   return (
-    <main className="site-container min-h-[65vh] py-8">
+    <main className="site-container min-h-[65vh] py-6 sm:py-8">
       <div className="mx-auto max-w-2xl">
-        <h1 className="text-xl font-extrabold text-ink">
+        <h1 className="text-xl font-extrabold tracking-tight text-ink sm:text-2xl">
           আমার প্রোফাইল
         </h1>
         <p className="mt-1 text-sm text-muted">
@@ -49,7 +60,7 @@ export default function ProfilePage() {
         </p>
 
         <section className="surface-card mt-5 flex flex-wrap items-center gap-4 p-5">
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#e4f3e8] text-2xl font-bold text-brand">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-emerald-700 text-2xl font-bold text-white shadow-sm shadow-emerald-600/30">
             {(user.name || user.email || "U").charAt(0).toUpperCase()}
           </div>
 
@@ -57,14 +68,14 @@ export default function ProfilePage() {
             <h2 className="font-bold text-ink">
               {user.name || "ব্যবহারকারী"}
             </h2>
-            <p className="mt-1 break-all text-sm text-muted">
+            <p className="mt-0.5 break-all text-sm text-muted">
               {user.email}
             </p>
           </div>
 
           <button
             onClick={handleSignOut}
-            className="btn btn-outline btn-sm border-red-200 text-red-600"
+            className="rounded-lg border border-red-200 bg-white px-3.5 py-2 text-xs font-semibold text-red-600 transition-colors hover:bg-red-50"
           >
             সাইন আউট
           </button>
@@ -76,10 +87,7 @@ export default function ProfilePage() {
             আপনার নাম পরিবর্তন করতে Update Information নির্বাচন করুন।
           </p>
 
-          <Link
-            href="/profile/update"
-            className="brand-button mt-4"
-          >
+          <Link href="/profile/update" className="brand-button mt-4">
             তথ্য আপডেট করুন
           </Link>
         </section>

@@ -5,44 +5,59 @@
   themes: light --default;
 }
 
-
+/* ---------------------------------------------------------------
+   Design tokens
+   --------------------------------------------------------------- */
 :root {
-  --background: #f0f5f0;
-  --foreground: #24332a;
+  --background: #f1f6f2;
+  --foreground: #1f2d25;
   --primary: #008b45;
-  --border: #e2eae3;
-  --muted: #758078;
+  --border: #e3ebe4;
+  --muted: #6b7a70;
+
+  --radius-card: 16px;
+  --shadow-card: 0 1px 2px rgb(31 45 37 / 4%), 0 8px 24px -16px rgb(31 45 37 / 18%);
+  --shadow-card-hover: 0 2px 4px rgb(31 45 37 / 5%), 0 18px 40px -20px rgb(31 45 37 / 30%);
 }
 
 @theme {
   --color-brand: #008b45;
   --color-brand-dark: #006e36;
-  --color-page: #f0f5f0;
-  --color-ink: #24332a;
-  --color-muted: #758078;
-  --color-line: #e2eae3;
-
-  --font-bengali: "Noto Sans Bengali", "Hind Siliguri",
-    sans-serif;
+  --color-brand-soft: #e7f6ed;
+  --color-page: #f1f6f2;
+  --color-ink: #1f2d25;
+  --color-muted: #6b7a70;
+  --color-line: #e3ebe4;
 }
 
+/*
+  ফন্ট ভ্যারিয়েবলটি next/font থেকে আসে (layout.js-এর `--font-bengali`)।
+  এখানে না দেওয়াই ভালো — না হলে @theme-এর মান html এলিমেন্টের
+  ভ্যারিয়েবলকে কভার করে ফেলবে।
+*/
+
+/* ---------------------------------------------------------------
+   Base
+   --------------------------------------------------------------- */
 * {
   box-sizing: border-box;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 100px;
+  /* sticky header ≈ 130px — anchor links land below it */
+  scroll-padding-top: 150px;
 }
 
 body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: "Noto Sans Bengali", "Hind Siliguri",
-    "Nirmala UI", sans-serif;
-  font-size: 14px;
+  font-family: var(--font-bengali), "Nirmala UI", sans-serif;
+  font-size: 15px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 button,
@@ -66,132 +81,113 @@ img {
   max-width: 100%;
 }
 
+::selection {
+  background: rgb(0 139 69 / 18%);
+}
+
+/* ---------------------------------------------------------------
+   Layout helpers
+   --------------------------------------------------------------- */
 .site-container {
   width: min(100% - 32px, 1120px);
   margin-inline: auto;
 }
 
+/* ---------------------------------------------------------------
+   Surfaces & typography
+   --------------------------------------------------------------- */
 .surface-card {
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-card);
   background: #fff;
-  box-shadow: 0 2px 8px rgb(35 55 40 / 3%);
+  box-shadow: var(--shadow-card);
+}
+
+/* interactive cards: subtle lift on hover (pointer devices only) */
+.surface-card.is-clickable,
+a.surface-card,
+.link-card {
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+}
+
+@media (hover: hover) {
+  .surface-card.is-clickable:hover,
+  a.surface-card:hover,
+  .link-card:hover {
+    transform: translateY(-3px);
+    border-color: #c9e6d4;
+    box-shadow: var(--shadow-card-hover);
+  }
 }
 
 .section-title {
   margin: 0;
-  color: #25352a;
-  font-size: 17px;
+  color: #22312a;
+  font-size: 19px;
   font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .section-subtitle {
-  margin-top: 5px;
+  margin-top: 6px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
+/* ---------------------------------------------------------------
+   Buttons
+   --------------------------------------------------------------- */
 .brand-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
-  min-height: 38px;
+  min-height: 40px;
   border: 0;
-  border-radius: 7px;
-  background: var(--primary);
-  padding: 9px 16px;
-  color: white;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #00994d 0%, var(--primary) 55%, #007a3d 100%);
+  padding: 10px 18px;
+  color: #fff;
   font-weight: 600;
-  transition: background 150ms ease;
+  font-size: 14px;
+  box-shadow: 0 6px 16px -8px rgb(0 139 69 / 65%);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
 }
 
 .brand-button:hover {
-  background: var(--color-brand-dark);
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px -8px rgb(0 139 69 / 70%);
+}
+
+.brand-button:active {
+  transform: translateY(0);
 }
 
 .brand-button:focus-visible,
 a:focus-visible,
-button:focus-visible {
-  outline: 2px solid #008b45;
+button:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--primary);
   outline-offset: 3px;
 }
 
-@keyframes ticker-scroll {
-  from {
-    transform: translateX(0);
-  }
-
-  to {
-    transform: translateX(-50%);
-  }
-}
-
+/* ---------------------------------------------------------------
+   Price ticker
+   --------------------------------------------------------------- */
 .price-ticker-track {
   display: flex;
   width: max-content;
-  animation: ticker-scroll 45s linear infinite;
+  animation: bazardor-ticker 45s linear infinite;
 }
 
-.price-ticker:hover .price-ticker-track {
-  animation-play-state: paused;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  .price-ticker-track {
-    animation: none;
-  }
-}
-
-@media (max-width: 640px) {
-  .site-container {
-    width: min(100% - 24px, 1120px);
-  }
-
-  .section-title {
-    font-size: 15px;
-  }
-}
-
-
-/* Bazar Dor: form field color fix */
-input,
-textarea,
-select {
-  color: #111827;
-  background-color: #ffffff;
-}
-
-input::placeholder,
-textarea::placeholder {
-  color: #9ca3af;
-  opacity: 1;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-}
-
-/* Ensure disabled buttons remain readable */
-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-
-
-.price-ticker-track {
-  display: flex;
-  width: max-content;
-  animation: bazardor-ticker 35s linear infinite;
-}
-
+.price-ticker:hover .price-ticker-track,
 .price-ticker-track:hover {
   animation-play-state: paused;
 }
@@ -206,8 +202,98 @@ button:disabled {
   }
 }
 
+/* horizontal category strip: hide the scrollbar, keep scrolling */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------------------------------------------------------------
+   Forms
+   --------------------------------------------------------------- */
+input,
+textarea,
+select {
+  color: #16211b;
+  background-color: #ffffff;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9aa8a0;
+  opacity: 1;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+/* consistent field styling for auth & profile forms */
+.field-input {
+  width: 100%;
+  border: 1px solid #d7e2d9;
+  border-radius: 12px;
+  background: #fff;
+  padding: 11px 14px;
+  font-size: 14.5px;
+  color: #16211b;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.field-input:hover {
+  border-color: #bdd4c3;
+}
+
+.field-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgb(0 139 69 / 12%);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ---------------------------------------------------------------
+   Motion preferences
+   --------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .price-ticker-track {
     animation: none;
+  }
+
+  .surface-card,
+  .brand-button,
+  .field-input {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Small screens
+   --------------------------------------------------------------- */
+@media (max-width: 640px) {
+  body {
+    font-size: 14.5px;
+  }
+
+  .site-container {
+    width: min(100% - 24px, 1120px);
+  }
+
+  .section-title {
+    font-size: 17px;
   }
 }
