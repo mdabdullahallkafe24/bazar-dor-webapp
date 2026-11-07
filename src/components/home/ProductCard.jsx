@@ -5,7 +5,7 @@ export function formatPrice(value) {
 
   if (!Number.isFinite(price)) return "দাম পাওয়া যায়নি";
 
- 
+  return `${price.toLocaleString("bn-BD")} টাকা`;
 }
 
 export default function ProductCard({ product }) {
