@@ -1,14 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import NavbarDate from "@/components/NavbarDate";
 import CategoryNav from "./CategoryNav";
 import PriceTicker from "./PriceTicker";
+import UserMenu from "./UserMenu";
 
 export default function Navbar() {
-  const pathname = usePathname();
-
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85">
       <div className="site-container">
@@ -32,40 +30,17 @@ export default function Navbar() {
             </span>
           </Link>
 
-          <div className="flex shrink-0 items-center gap-2">
-            <Link
-              href="/signin"
-              aria-current={pathname === "/signin" ? "page" : undefined}
-              className={`rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
-                pathname === "/signin"
-                  ? "bg-emerald-50 text-emerald-800"
-                  : "text-gray-600 hover:bg-emerald-50 hover:text-emerald-700"
-              }`}
-            >
-              সাইন ইন
-            </Link>
-
-            <Link
-              href="/signup"
-              aria-current={pathname === "/signup" ? "page" : undefined}
-              className={`rounded-lg px-3.5 py-2 text-xs font-semibold shadow-sm transition-colors ${
-                pathname === "/signup"
-                  ? "bg-brand-dark text-white"
-                  : "bg-brand text-white hover:bg-brand-dark"
-              }`}
-            >
-              সাইন আপ
-            </Link>
-          </div>
+        
+          <UserMenu />
         </div>
 
-        {/* Category navigation */}
+        
         <div className="border-t border-line/70">
           <CategoryNav />
         </div>
       </div>
 
-      {/* Scrolling market ticker */}
+      
       <PriceTicker />
     </header>
   );

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { authClient, friendlyAuthError } from "@/lib/auth-client";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -39,13 +40,30 @@ export default function SignUpForm() {
       });
 
       if (result?.error) {
-        setError(result.error.message || "অ্যাকাউন্ট তৈরি করা যায়নি।");
+        const message =
+          friendlyAuthError(result.error.message) ||
+          "অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।";
+        setError(message);
+        toast.error(message);
         return;
       }
 
-      router.push("/signin?registered=true");
+      // session তৈরি হলে হোম পেজে, না হলে লগইন পেজে (confirmation সহ)।
+      const signedIn = Boolean(result?.data?.token || result?.data?.session);
+
+      if (signedIn) {
+        toast.success("অ্যাকাউন্ট তৈরি হয়েছে! স্বাগতম।");
+        router.push("/");
+      } else {
+        toast.success("অ্যাকাউন্ট তৈরি হয়েছে! এখন লগইন করুন।");
+        router.push("/signin?registered=true");
+      }
+
+      router.refresh();
     } catch (err) {
-      setError(err?.message || "সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      const message = err?.message || "সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }

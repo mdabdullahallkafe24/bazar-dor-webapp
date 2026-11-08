@@ -1,12 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
+import { authClient, friendlyAuthError } from "@/lib/auth-client";
+import SocialLogin from "@/components/auth/SocialLogin";
 
+// useSearchParams ব্যবহারের জন্য Next একটি Suspense boundary চায়।
 export default function SignInPage() {
+  return (
+    <Suspense fallback={<SignInFallback />}>
+      <SignInView />
+    </Suspense>
+  );
+}
+
+function SignInFallback() {
+  return (
+    <main className="flex min-h-[calc(100vh-180px)] items-center justify-center bg-gradient-to-b from-[#f4fbf6] to-page px-4 py-10">
+      <div className="skeleton h-[32rem] w-full max-w-md rounded-2xl" />
+    </main>
+  );
+}
+
+function SignInView() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // নতুন অ্যাকাউন্ট নিয়ে signup থেকে আসা ইউজারকে নিশ্চিত করানো হয়।
+  const justRegistered = searchParams.get("registered") === "true";
+
+  // শুধু নিজ সাইটের path-এ redirect করা হবে (external URL ব্লক)।
+  const requestedCallback = searchParams.get("callbackURL") || "/";
+  const callbackURL =
+    requestedCallback.startsWith("/") && !requestedCallback.startsWith("//")
+      ? requestedCallback
+      : "/";
 
   const [form, setForm] = useState({
     email: "",
@@ -15,6 +45,11 @@ export default function SignInPage() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // signup থেকে আসা নতুন ইউজারকে দেখানো নিশ্চিতকরণ বার্তা।
+  const notice = justRegistered
+    ? "অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে! এখন লগইন করুন।"
+    : "";
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -30,34 +65,39 @@ export default function SignInPage() {
     setError("");
 
     if (!form.email.trim() || !form.password) {
-      setError("ইমেইল ও পাসওয়ার্ড লিখুন।");
+      const message = "ইমেইল ও পাসওয়ার্ড লিখুন।";
+      setError(message);
+      toast.error(message);
       return;
     }
 
     setLoading(true);
 
     try {
-      const callbackURL = new URLSearchParams(window.location.search).get(
-        "callbackURL"
-      );
-
       const result = await authClient.signIn.email({
         email: form.email.trim(),
         password: form.password,
-        ...(callbackURL ? { callbackURL } : {}),
+        callbackURL,
       });
 
       if (result?.error) {
-        setError(
-          result.error.message || "সাইন ইন করা যায়নি। আবার চেষ্টা করুন।"
-        );
+        // ব্যর্থ হলে শুধু এরর দেখানো হয় — কোনো রিডাইরেক্ট করা হয় না।
+        const message =
+          friendlyAuthError(result.error.message) ||
+          "সাইন ইন করা যায়নি। আবার চেষ্টা করুন।";
+        setError(message);
+        toast.error(message);
         return;
       }
 
-      router.push(callbackURL || "/");
+      // সফল হলে হোম পেজে (বা callbackURL-এ) নিয়ে যাওয়া হয়।
+      toast.success("সফলভাবে সাইন ইন হয়েছেন!");
+      router.push(callbackURL);
       router.refresh();
     } catch {
-      setError("সাইন ইন করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করুন।");
+      const message = "সাইন ইন করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করুন।";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -131,6 +171,15 @@ export default function SignInPage() {
             />
           </div>
 
+          {notice && (
+            <p
+              role="status"
+              className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm text-emerald-700"
+            >
+              {notice}
+            </p>
+          )}
+
           {error && (
             <p
               role="alert"
@@ -162,7 +211,9 @@ export default function SignInPage() {
           <div className="h-px flex-1 bg-line" />
         </div>
 
-        <p className="text-center text-sm text-gray-600">
+        <SocialLogin />
+
+        <p className="mt-5 text-center text-sm text-gray-600">
           অ্যাকাউন্ট নেই?{" "}
           <Link
             href="/signup"

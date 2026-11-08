@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { authClient, friendlyAuthError } from "@/lib/auth-client";
+
+const PROVIDER_LABELS = {
+  google: "Google",
+  github: "GitHub",
+};
 
 export default function SocialLogin() {
   const [loadingProvider, setLoadingProvider] = useState("");
@@ -16,13 +22,18 @@ export default function SocialLogin() {
       });
 
       if (result?.error) {
-        window.alert(
-          result.error.message || `${provider} দিয়ে লগইন করা যায়নি।`
+        // সফল হলে ব্রাউজার নিজেই প্রোভাইডারের পেজে রিডাইরেক্ট হবে,
+        // তাই এখানে শুধু এরর দেখানো হয়।
+        toast.error(
+          friendlyAuthError(result.error.message) ||
+            `${PROVIDER_LABELS[provider]} দিয়ে লগইন করা যায়নি।`
         );
         setLoadingProvider("");
       }
     } catch (error) {
-      window.alert(error?.message || "সোশ্যাল লগইনে সমস্যা হয়েছে।");
+      toast.error(
+        friendlyAuthError(error?.message) || "সোশ্যাল লগইনে সমস্যা হয়েছে।"
+      );
       setLoadingProvider("");
     }
   }

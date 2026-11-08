@@ -2,6 +2,7 @@ import { Noto_Sans_Bengali } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import AppToaster from "@/components/layout/AppToaster";
 
 // বাংলা টেক্সটের জন্য অপ্টিমাইজড ফন্ট (self-hosted, no layout shift)।
 const notoSansBengali = Noto_Sans_Bengali({
@@ -33,6 +34,9 @@ export default function RootLayout({ children }) {
         <main className="flex-1">{children}</main>
 
         <Footer />
+
+        {/* লগইন / সাইনআপ / লগআউট ও ভ্যালিডেশন এররের টোস্ট নোটিফিকেশন */}
+        <AppToaster />
       </body>
     </html>
   );

@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { authClient, friendlyAuthError } from "@/lib/auth-client";
 
 export default function SignInForm() {
   const router = useRouter();
@@ -20,7 +21,11 @@ export default function SignInForm() {
     setLoading(true);
 
     try {
-      const callbackURL = searchParams.get("callbackURL") || "/";
+      const requestedCallback = searchParams.get("callbackURL") || "/";
+      const callbackURL =
+        requestedCallback.startsWith("/") && !requestedCallback.startsWith("//")
+          ? requestedCallback
+          : "/";
 
       const result = await authClient.signIn.email({
         email,
@@ -29,14 +34,23 @@ export default function SignInForm() {
       });
 
       if (result?.error) {
-        setError(result.error.message || "লগইন করা যায়নি। তথ্যগুলো যাচাই করুন।");
+        // ব্যর্থ হলে এরর দেখিয়ে থেকে যাওয়া হয় — রিডাইরেক্ট করা হয় না।
+        const message =
+          friendlyAuthError(result.error.message) ||
+          "লগইন করা যায়নি। তথ্যগুলো যাচাই করুন।";
+        setError(message);
+        toast.error(message);
         return;
       }
 
+      // সফল সাইন ইনে হোম পেজে নিয়ে যাওয়া হয়।
+      toast.success("সফলভাবে সাইন ইন হয়েছেন!");
       router.push(callbackURL);
       router.refresh();
     } catch (err) {
-      setError(err?.message || "সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+      const message = err?.message || "সমস্যা হয়েছে। আবার চেষ্টা করুন।";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }

@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { authClient, friendlyAuthError } from "@/lib/auth-client";
+import SocialLogin from "@/components/auth/SocialLogin";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -37,17 +39,23 @@ export default function SignUpPage() {
       !form.password ||
       !form.confirmPassword
     ) {
-      setError("সবগুলো ঘর পূরণ করুন।");
+      const message = "সবগুলো ঘর পূরণ করুন।";
+      setError(message);
+      toast.error(message);
       return;
     }
 
     if (form.password.length < 8) {
-      setError("পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।");
+      const message = "পাসওয়ার্ড কমপক্ষে ৮ অক্ষরের হতে হবে।";
+      setError(message);
+      toast.error(message);
       return;
     }
 
     if (form.password !== form.confirmPassword) {
-      setError("দুটি পাসওয়ার্ড মিলছে না।");
+      const message = "দুটি পাসওয়ার্ড মিলছে না।";
+      setError(message);
+      toast.error(message);
       return;
     }
 
@@ -61,16 +69,32 @@ export default function SignUpPage() {
       });
 
       if (result?.error) {
-        setError(
-          result.error.message || "অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।"
-        );
+        const message =
+          friendlyAuthError(result.error.message) ||
+          "অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।";
+        setError(message);
+        toast.error(message);
         return;
       }
 
-      router.push("/");
+      // better-auth সাইনআপের সাথে সাথেই session তৈরি করে (auto sign-in)।
+      // তাই সফল হলে সোজা হোম পেজে নিয়ে যাওয়া হয়; session না পেলে
+      // লগইন পেজে পাঠিয়ে সেখানে confirmation দেখানো হয়।
+      const signedIn = Boolean(result?.data?.token || result?.data?.session);
+
+      if (signedIn) {
+        toast.success("অ্যাকাউন্ট তৈরি হয়েছে! স্বাগতম।");
+        router.push("/");
+      } else {
+        toast.success("অ্যাকাউন্ট তৈরি হয়েছে! এখন লগইন করুন।");
+        router.push("/signin?registered=true");
+      }
+
       router.refresh();
     } catch {
-      setError("অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।");
+      const message = "অ্যাকাউন্ট তৈরি করা যায়নি। আবার চেষ্টা করুন।";
+      setError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -219,7 +243,9 @@ export default function SignUpPage() {
           <div className="h-px flex-1 bg-line" />
         </div>
 
-        <p className="text-center text-sm text-gray-600">
+        <SocialLogin />
+
+        <p className="mt-5 text-center text-sm text-gray-600">
           নিবন্ধন করে আপনি আমাদের সেবা ব্যবহারে সম্মত হচ্ছেন।
         </p>
 
