@@ -1,5 +1,9 @@
 
+import { connection } from "next/server";
+import { unstable_rethrow } from "next/navigation";
+
 import { getProducts } from "@/lib/api";
+
 import HeroSection from "@/components/home/HeroSection";
 import PriceSection from "@/components/home/PriceSection";
 import AllProducts from "@/components/home/AllProducts";
@@ -7,6 +11,9 @@ import AllProducts from "@/components/home/AllProducts";
 export const instant = false;
 
 export default async function HomePage() {
+  // Wait for an incoming request before fetching live API data.
+  await connection();
+
   let products = [];
   let errorMessage = "";
 
@@ -19,6 +26,9 @@ export default async function HomePage() {
         ? result.products
         : [];
   } catch (error) {
+    // Do not swallow Next.js internal rendering errors.
+    unstable_rethrow(error);
+
     console.error("Products API error:", error);
 
     errorMessage =
@@ -32,18 +42,7 @@ export default async function HomePage() {
         Number(b.change?.pct ?? 0) -
         Number(a.change?.pct ?? 0)
     )
-    .slice(0, 6);PS C:\Users\Computer\Desktop\WEB COURSE\bazar-dor-webapp> git push --force-with-lease origin main
-Enumerating objects: 23, done.
-Counting objects: 100% (23/23), done.
-Delta compression using up to 8 threads
-Compressing objects: 100% (11/11), done.
-Writing objects: 100% (12/12), 2.65 KiB | 542.00 KiB/s, done.
-Total 12 (delta 7), reused 0 (delta 0), pack-reused 0 (from 0)
-remote: Resolving deltas: 100% (7/7), completed with 7 local objects.
-To https://github.com/mdabdullahallkafe24/bazar-dor-webapp.git
- + de2fd91...3c0fa22 main -> main (forced update)
-PS C:\Users\Computer\Desktop\WEB COURSE\bazar-dor-webapp> 
-
+    .slice(0, 6);
 
   const decreasedProducts = products
     .filter((product) => product.change?.dir === "down")
