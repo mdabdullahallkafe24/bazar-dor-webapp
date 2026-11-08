@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# 🛒 বাজার দর | BazarDor
 
-First, run the development server:
+### Know Today's Market Prices at a Glance
+
+BazarDor is a responsive web application that helps users explore daily essential product prices across different markets in Bangladesh. Users can compare prices, browse categories, view product details, and manage their accounts.
+
+## 🚀 Live Website
+
+Coming Soon
+
+## 🛠️ Technologies Used
+
+- Next.js (App Router)
+- React.js
+- JavaScript
+- Tailwind CSS
+- MongoDB
+- Better Auth
+- Google OAuth
+- GitHub OAuth
+- React Hot Toast
+
+## ✨ Key Features
+
+1. **Product Listing:** Browse essential products with their current prices and units.
+2. **Price Comparison:** Explore products with increasing and decreasing price trends.
+3. **Category Filtering:** Find products by category and sort them by price.
+4. **Product Details:** View product information, minimum price, maximum price, average price, and market-wise prices.
+5. **Authentication:** Register and sign in using email/password, Google, and GitHub.
+6. **User Profile:** View and update profile information.
+7. **Responsive Design:** Enjoy a user-friendly experience on mobile, tablet, and desktop devices.
+8. **Protected Routes:** Restrict selected pages to authenticated users.
+
+## 🔌 API Information
+
+BazarDor uses the following API endpoints:
+
+**Main API**
+```text
+https://openapi.programming-hero.com/api/bazardor
+```
+
+**Alternative APIs**
+```text
+https://api.api-store.workers.dev/api/bazardor
+https://api.abcz.workers.dev/api/bazardor
+```
+
+## 📦 Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/mdabdullahallkafe24/bazar-dor-webapp.git
+```
+
+Go to the project directory:
+
+```bash
+cd bazar-dor-webapp
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env.local` file in the root directory and configure the required environment variables:
+
+```env
+BETTER_AUTH_SECRET=
+BETTER_AUTH_URL=http://localhost:3000
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+MONGODB_URI=
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+bazar-dor-webapp/
+├── public/
+├── src/
+│   ├── app/
+│   ├── components/
+│   └── lib/
+├── .env.local
+├── .gitignore
+├── package.json
+└── README.md
+```
 
-## Learn More
+## 🔐 Security
 
-To learn more about Next.js, take a look at the following resources:
+- Environment variables are kept out of version control.
+- Authentication is handled using Better Auth.
+- Social login uses Google and GitHub OAuth.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 👨‍💻 Author
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Abdullah Al-Kafi**
 
-## Deploy on Vercel
+GitHub: [@mdabdullahallkafe24](https://github.com/mdabdullahallkafe24)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Made with ❤️ for Bangladesh.
+

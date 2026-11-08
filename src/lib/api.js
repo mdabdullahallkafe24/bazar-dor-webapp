@@ -1,3 +1,4 @@
+
 const API_BASE_URL =
   "https://openapi.programming-hero.com/api/bazardor";
 
@@ -26,6 +27,7 @@ function normalizeList(result, key) {
   if (Array.isArray(result)) return result;
   if (Array.isArray(result?.[key])) return result[key];
   if (Array.isArray(result?.items)) return result.items;
+
   return [];
 }
 
@@ -40,8 +42,6 @@ export async function getProducts(category) {
 }
 
 export async function getProduct(slug) {
-  // API-তে single product শুধু id দিয়ে পাওয়া যায়, slug দিয়ে নয়।
-  // তাই আগে slug filter দিয়ে খোঁজা হয়, না পেলে id হিসেবে চেষ্টা করা হয়।
   const result = await request(
     `/products?slug=${encodeURIComponent(slug)}`
   );
@@ -51,7 +51,6 @@ export async function getProduct(slug) {
   }
 
   if (Array.isArray(result)) {
-    // slug দিয়ে না পেলে id হিসেবে খোঁজার চেষ্টা (যেমন /products/1)।
     const byId = await request(
       `/products/${encodeURIComponent(slug)}`
     );

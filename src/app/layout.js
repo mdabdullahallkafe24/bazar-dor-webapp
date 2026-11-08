@@ -27,7 +27,11 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="bn" className={notoSansBengali.variable}>
+    <html
+      lang="bn"
+      className={notoSansBengali.variable}
+      data-scroll-behavior="smooth"
+    >
       <body className="min-h-screen flex flex-col">
         <Navbar />
 
